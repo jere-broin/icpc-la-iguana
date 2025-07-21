@@ -140,10 +140,11 @@ poly invert(poly &p, int d){
 	return res;
 }
 
-pair<poly,poly> divslow(poly &a, poly &b){
+pair<poly,poly> divslow(poly &a, poly &b){ // O(n*m + logMOD)
 	poly q,r=a;
+	tf inve=inv(b.back());
 	while(SZ(r)>=SZ(b)){
-		q.pb(mulmod(r.back(),inv(b.back())));
+		q.pb(mulmod(r.back(),inve));
 		if(q.back()) fore(i,0,SZ(b)){
 			r[SZ(r)-i-1]=submod(r[SZ(r)-i-1],mulmod(q.back(),b[SZ(b)-i-1]));
 		}
