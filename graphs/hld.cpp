@@ -17,8 +17,8 @@ void hld(int x, int c){
 	for(int y:g[x])if(y!=mx&&y!=dad[x])hld(y,-1);
 }
 void hld_init(){dad[0]=-1;dep[0]=0;dfs1(0);curpos=0;hld(0,-1);}
-int query(int x, int y, STree& rmq){
-	int r=NEUT;
+ll query(int x, int y, STree& rmq){
+	ll r=NEUT;
 	while(head[x]!=head[y]){
 		if(dep[head[x]]>dep[head[y]])swap(x,y);
 		r=oper(r,rmq.query(pos[head[y]],pos[y]+1));
