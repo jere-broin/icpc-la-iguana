@@ -6,6 +6,8 @@
 #define fst first
 #define snd second
 #define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define SZ(x) ((ll)x.size())
+#define ALL(x) x.begin(),x.end()
 using namespace std;
 typedef long long ll;
 
@@ -36,22 +38,22 @@ struct pt {  // for 3D add z coordinate
 	pt rot(pt r){return pt(*this%r,*this*r);}
 	pt rot(double a){return rot(pt(sin(a),cos(a)));}
 };
+
 // CCW order
 // Includes collinear points (change sign of EPS in left to exclude)
+// Complexity: O(nlog(n)), O(n) if the vector is alredy sorted
 vector<pt> chull(vector<pt> p){
+	if(SZ(p)<3) return p;
 	vector<pt> r;
-	sort(p.begin(),p.end()); // first x, then y
-	fore(i,0,p.size()){ // lower hull
-		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
-		r.pb(p[i]);
+    sort(ALL(p)); //first x, then y. Remove if alredy sorted
+	int k=0;
+	fore(_,0,2){//first lower hull, then upper hull
+		fore(i,0,SZ(p)){
+			while(SZ(r)>1+k&&r.back().left(r[SZ(r)-2],p[i]))r.pop_back();
+			r.pb(p[i]);
+		}
+        r.pop_back(),k=SZ(r),reverse(ALL(p));
 	}
-	r.pop_back();
-	int k=r.size();
-	for(int i=p.size()-1;i>=0;--i){ // upper hull
-		while(r.size()>=k+2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
-		r.pb(p[i]);
-	}
-	r.pop_back();
 	return r;
 }
 
