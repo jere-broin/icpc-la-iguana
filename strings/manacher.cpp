@@ -6,7 +6,7 @@
 // d = 1 1 1 1 1 1 7 1 1 1 1 1 1 , p=1
 
 vv manacher(string &s, bool p){ // p == palindrome length parity
-    int n=SZ(s), l=-1,r=0;  // last maximal palindrome open endpoints
+    int n=SZ(s), l=-1,r=0;  // last maximal palindrome is substring (l,r)
     vv d(n);
     fore(i,0,n){
         int k=(i<r?min(d[l+r-i+!p],r-i):p);
