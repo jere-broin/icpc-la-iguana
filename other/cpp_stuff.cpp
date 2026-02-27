@@ -1,21 +1,23 @@
+ifstream inpu;	inpu.open("pre", ios::in); // file input
 // double inf
 const double DINF=numeric_limits<double>::infinity();
-// Custom comparator for set/map
-struct comp {
-	bool operator()(const double& a, const double& b) const {
-		return a+EPS<b;}
-};
-set<double,comp> w; // or map<double,int,comp>
-// Iterate over non empty subsets of bitmask
+// Iterate over NON EMPTY subsets of bitmask
 for(int s=m;s;s=(s-1)&m) // Decreasing order
 for (int s=0;s=s-m&m;) 	 // Increasing order
-// Return the numbers the numbers of 1-bit in x
-int __builtin_popcount (unsigned int x)
-// Returns the number of trailing 0-bits in x. x=0 is undefined.
-int __builtin_ctz (unsigned int x)
-// Returns the number of leading 0-bits in x. x=0 is undefined.
-int __builtin_clz (unsigned int x)
-// x of type long long just add 'll' at the end of the function.
-int __builtin_popcountll (unsigned long long x)
-// Get the value of the least significant bit that is one.
-v=(x&(-x))
+// Generate all n-bit bitmasks with k ones, increasing
+ll mk=(1ll<<k)-1,r,c;
+while(mk<=(1ll<<n)-(1ll<<(n-k))){
+	// Code here
+	if(!k)break;
+	c=mk&-mk,r=mk+c,mk=r|(((r^mk)>>2)/c);
+}
+#include <tr2/dynamic_bitset> // dynamic bitset
+using namespace tr2;
+dynamic_bitset<> b; // bugged shifts in GCC <= 14.2 !!
+gp_hash_table<ll,ll> ht; // faster hash table, same includes as extended set
+ull splitmix64(ull x) { // splitmix
+	x += R1; // R1, R2, R3, random constant 64-bit odd numbers
+	x = (x ^ (x >> 30)) * R2;
+	x = (x ^ (x >> 27)) * R3;
+	return x ^ (x >> 31);
+}
