@@ -9,24 +9,25 @@
 using namespace std;
 typedef long long ll;
 
-struct UnionFind {
-	int n,comp;
-	vector<int> uf,si,c;
-	UnionFind(int n=0):n(n),comp(n),uf(n),si(n,1){
-		fore(i,0,n)uf[i]=i;}
-	int find(int x){return x==uf[x]?x:find(uf[x]);}
-	bool join(int x, int y){
-		if((x=find(x))==(y=find(y)))return false;
-		if(si[x]<si[y])swap(x,y);
-		si[x]+=si[y];uf[y]=x;comp--;c.pb(y);
-		return true;
+struct RollbackUF {
+	vector<int> e; vector<pii> st;
+	RollbackUF(int n) : e(n, -1) {}
+	int size(int x) { return -e[find(x)]; }
+	int find(int x) { return e[x] < 0 ? x : find(e[x]); }
+	int time() { return sz(st); }
+	void rollback(int t) {
+		for (int i = time(); i --> t;)
+			e[st[i].first] = st[i].second;
+		st.resize(t);
 	}
-	int snap(){return c.size();}
-	void rollback(int snap){
-		while(c.size()>snap){
-			int x=c.back();c.pop_back();
-			si[uf[x]]-=si[x];uf[x]=x;comp++;
-		}
+	bool join(int a, int b) {
+		a = find(a), b = find(b);
+		if (a == b) return false;
+		if (e[a] > e[b]) swap(a, b);
+		st.push_back({a, e[a]});
+		st.push_back({b, e[b]});
+		e[a] += e[b]; e[b] = a;
+		return true;
 	}
 };
 enum {ADD,DEL,QUERY};
