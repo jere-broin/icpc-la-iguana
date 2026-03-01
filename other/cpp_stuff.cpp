@@ -34,3 +34,4 @@ ull splitmix64(ull x) { // splitmix
 	x = (x ^ (x >> 27)) * R3;
 	return x ^ (x >> 31);
 }
+from sympy.ntheory.modular import crt # python crt
