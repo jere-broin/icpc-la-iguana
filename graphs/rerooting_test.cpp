@@ -1,11 +1,41 @@
+// CSES Tree Distances II
+// AC: https://cses.fi/paste/eaf2ec082533ba1dfa786b/
+#include <bits/stdc++.h>
+#define pb push_back
+#define fst first
+#define snd second
+#define fore(i,a,b) for(ll i=a,jet=b;i<jet;++i)
+#define SZ(x) ((int)x.size())
+#define ALL(x) x.begin(),x.end()
+#define mset(a,v) memset((a),(v),sizeof(a))
+#define FIN ios::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+#define imp(v) {for(auto gdljh:v)cout<<gdljh<<" "; cout<<"\n";}
+using namespace std;
+typedef long long ll;
+typedef pair<ll,ll> ii;
+const ll MAXN=2e5+5;
+
 vector<ii> g[MAXN]; // node, weight (1 if none)
 
 // to see what these mean, look at dfs1
-typedef ll node;
+struct node {
+	ll dp,q;
+	node():dp(0),q(0){} // NEUT
+	node(ll q):dp(0),q(q){}
+};
 node NEUT;
-node leaf(ll x){return NEUT;}
-node merge(node a, node b){}
-node up(node x, ll w){}
+node leaf(ll x){
+	return node(1);
+}
+node merge(node a, node b){
+	a.q+=b.q;
+	a.dp+=b.dp;
+	return a;
+}
+node up(node x, ll w){
+	x.dp+=x.q;
+	return x;
+}
 
 node h[MAXN],ch[MAXN]; // hijo, complement hijo (SIN ARISTA PADRE)
 node tot[MAXN]; // total
@@ -48,4 +78,17 @@ void reroot(ll n){
 		// you may want to treat the root specially
 		// if that is the case, remember to recalculate tot[rt]
 	}
+}
+
+int main(){FIN;
+	ll n; cin>>n;
+	fore(i,0,n-1){
+		ll u,v; cin>>u>>v; u--,v--;
+		g[u].pb({v,1});
+		g[v].pb({u,1});
+	}
+	reroot(n);
+	fore(i,0,n)cout<<tot[i].dp<<" ";
+	cout<<"\n";
+	return 0;
 }
