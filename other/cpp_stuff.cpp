@@ -26,6 +26,7 @@ uniform_(int|real)_distribution<int>(a,b)(rng);
 #pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 #include <tr2/dynamic_bitset> // dynamic bitset<> b
 using namespace tr2; // bugged shifts in GCC <= 14.2 !!
+xl MOD=212345678987654321LL,P=1777771,PI=106955741089659571LL; //hash consts
 gp_hash_table<ll,ll> ht; // faster hash table, same includes as extended set
 ull splitmix64(ull x) { // splitmix
 	x += R1; // R1, R2, R3, random constant 64-bit odd numbers
