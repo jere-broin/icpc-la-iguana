@@ -1,19 +1,12 @@
 //Max palindrome centered on i
-int d1[MAXN];//d1[i] = max odd palindrome
-int d2[MAXN];//d2[i] = max even palindrome
-void manacher(string& s){
-	int l=0,r=-1,n=s.size();
-	fore(i,0,n){
-		int k=i>r?1:min(d1[l+r-i],r-i);
-		while(i+k<n&&i-k>=0&&s[i+k]==s[i-k])k++;
-		d1[i]=k--;
-		if(i+k>r)l=i-k,r=i+k;
-	}
-	l=0;r=-1;
-	fore(i,0,n){
-		int k=i>r?0:min(d2[l+r-i+1],r-i+1);k++;
-		while(i+k<=n&&i-k>=0&&s[i+k-1]==s[i-k])k++;
-		d2[i]=--k;
-		if(i+k-1>r)l=i-k,r=i+k-1;
-	}
+vv manacher(string &s, bool p){ // p==pal-len parity
+    int n=SZ(s), l=-1,r=0; 
+    vv d(n); // substr(l,r) last max pal
+    fore(i,0,n){
+        int k=(i<r?min(d[l+r-i+!p],r-i):p);
+        while(i+k<n&&k<i+p&&s[i-k-!p]==s[i+k]) k++;
+        d[i]=k;
+        if(i+k>r) r=i+k,l=i-k-!p;
+    }
+    return d;
 }
