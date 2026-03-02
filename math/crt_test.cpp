@@ -1,65 +1,53 @@
 //https://open.kattis.com/problems/generalchineseremainder
 #include <bits/stdc++.h>
+#define fore(i,a,b) for(ll i=a,jet=b; i<jet; i++)
 #define fst first
 #define snd second
 #define pb push_back
-#define mp make_pair
+#define SZ(x) ((ll)x.size())
 using namespace std;
 typedef long long ll;
 typedef pair<ll,ll> ii;
+typedef vector<ll> vv;
+typedef __int128 xl;
 
-ll gcd(ll a, ll b){while(b){ll t=a%b;a=b;b=t;}return a;}
-pair<ll,ll> extendedEuclid (ll a, ll b){ //a * x + b * y = gcd(a,b)
-	ll x,y;
-	if (b==0) return {1,0};
-	auto p=extendedEuclid(b,a%b);
-	x=p.snd;
-	y=p.fst-(a/b)*x;
-	if(a*x+b*y==-gcd(a,b)) x=-x, y=-y;
+ii extendedEuclid (ll a, ll b){ //a * x + b * y = gcd(a,b)
+	if(!b) return {1,0};
+	auto p=extendedEuclid(b,a%b); ll x=p.snd, y=p.fst-(a/b)*x;
+	if(a*x+b*y<0) x=-x, y=-y;
 	return {x,y};
 }
-pair<pair<ll,ll>,pair<ll,ll> > diophantine(ll a,ll b, ll r) {
+pair<ii,ii> diophantine(ll a,ll b,ll r) {
 	//a*x+b*y=r where r is multiple of gcd(a,b);
-	ll d=gcd(a,b);
-	a/=d; b/=d; r/=d;
-	auto p = extendedEuclid(a,b);
-	p.fst*=r; p.snd*=r;
-	assert(a*p.fst+b*p.snd==r);
+	ll d=gcd(a,b); a/=d; b/=d; r/=d;
+	auto p = extendedEuclid(a,b); p.fst*=r; p.snd*=r;
 	return {p,{-b,a}}; // solutions: p+t*ans.snd
 }
-
-ll inv(ll a, ll m) {
-	assert(gcd(a,m)==1);
-	ll x = diophantine(a,m,1).fst.fst;
-	return ((x%m)+m)%m;
-}
-
 #define mod(a,m) (((a)%m+m)%m)
-pair<ll,ll> sol(tuple<ll,ll,ll> c){ //requires inv, diophantine
-  ll a=get<0>(c), x1=get<1>(c), m=get<2>(c), d=gcd(a,m);
-  if(d==1) return {mod(x1*inv(a,m),m), m};
-  else return x1%d ? ii({-1LL,-1LL}) : sol(make_tuple(a/d,x1/d,m/d));
+#define inv(a,m) mod(diophantine(a,m,1).fst.fst,m)
+ii sol(ll a, ll x1, ll m){ //requires inv, diophantine
+  ll d=gcd(a,m); if(d<2) return {mod(x1*inv(a,m),m),m};
+  return x1%d ? ii({-1LL,-1LL}) : sol(a/d,x1/d,m/d);
 }
-pair<ll,ll> crt(vector< tuple<ll,ll,ll> > cond) { // returns: (sol, lcm)
-	ll x1=0,m1=1,x2,m2;
-	for(auto t:cond){
-		tie(x2,m2)=sol(t);
-		if(m2<0||(x1-x2)%gcd(m1,m2))return {-1,-1};
-		if(m1==m2)continue;
-		ll k=diophantine(m2,-m1,x1-x2).fst.snd,l=m1*(m2/gcd(m1,m2));
-		x1=mod((__int128)m1*k+x1,l);m1=l;
-	}
-	return sol(make_tuple(1,x1,m1));
-} //cond[i]={ai,bi,mi} ai*xi=bi (mi); assumes lcm fits in ll
+ii crt(vv as, vv bs, vv ms){ //returns:(sol,lcm)
+    ll x1=0,m1=1;
+    fore(i,0,SZ(ms)){
+        auto [x2,m2]=sol(as[i],bs[i],ms[i]);
+        if(m2<0||(x1-x2)%gcd(m1,m2))return{-1,-1};
+        if(m1==m2)continue;
+        ll k=diophantine(m2,-m1,x1-x2).fst.snd,l=lcm(m1,m2);
+        x1=mod((xl)m1*k+x1,l);m1=l;
+    }
+    return {x1,m1};
+}// as[i]*x=bs[i] (ms[i]); assumes lcm fits in ll
 
 int main(){
-  int T; cin >> T;
-  while(T--){
-    #define mt make_tuple
-    int a, n, b, m; cin >> a >> n >> b >> m;
-    vector<tuple<ll,ll,ll> > cond = {mt(1,a,n),mt(1,b,m)};
-    auto ans = crt(cond);
-    if(ans.fst==-1&&ans.snd==-1)cout<<"no solution\n";
-    else cout<<ans.fst<<" " <<ans.snd << "\n";
-  }
+    int T; cin >> T;
+    while(T--){
+        int a, n, b, m; cin >> a >> n >> b >> m;
+        vv as={1,1}, bs={a,b}, ms={n,m};
+        auto ans = crt(as,bs,ms);
+        if(ans.fst==-1&&ans.snd==-1)cout<<"no solution\n";
+        else cout<<ans.fst<<" " <<ans.snd << "\n";
+    }
 }
