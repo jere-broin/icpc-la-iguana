@@ -1,7 +1,7 @@
 typedef ll node;
 #define oper min
 #define NEUT INF
-struct STree{ // segment tree for min over ll integers
+struct STree{
 	int n; vector<node>t;
 	STree(int n):n(n),t(2*n+5,NEUT){}
 	void init(vector<node> &a){
@@ -19,4 +19,4 @@ struct STree{ // segment tree for min over ll integers
 		}
 		return oper(izq,der);
 	}
-}; // usage: STree rmq(n);rmq.init(x);rmq.upd(i,v);rmq.query(s,e);
+};
