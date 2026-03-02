@@ -1,6 +1,6 @@
 #define mod(a,m) (((a)%m+m)%m)
 #define inv(a,m) mod(diophantine(a,m,1).fst.fst,m)
-ii sol(ll a, ll x1, ll m){ //requires inv, diophantine
+ii sol(ll a, ll x1, ll m){ //requires dioph
   ll d=gcd(a,m);if(d<2)return{mod(x1*inv(a,m),m),m};
   return x1%d?ii({-1LL,-1LL}):sol(a/d,x1/d,m/d);
 }
