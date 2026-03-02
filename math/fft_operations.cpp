@@ -1,9 +1,3 @@
-// Polynomial division: O(n*log(n))
-// Multi-point polynomial evaluation: O(n*log^2(n))
-// Polynomial interpolation: O(n*log^2(n))
-// Inverse: O(n*log(n))
-// Log: O(n*log(n))
-// Exp: O(n*log(n))
 //Works with NTT. For FFT, just replace addmod,submod,mulmod,inv
 poly add(poly &a, poly &b){
 	int n=SZ(a),m=SZ(b);
@@ -12,28 +6,24 @@ poly add(poly &a, poly &b){
 	while(SZ(ans)>1&&!ans.back())ans.pop_back();
 	return ans;
 }
-// derivative of p
-poly derivate(poly &p){
+poly derivate(poly &p){//derivative of p
 	poly ans(max(1, SZ(p)-1));
 	fore(i,1,SZ(p)) ans[i-1]=mulmod(p[i],i);
 	return ans;
 }
-// integral of p
 poly integrate(poly &p){
-	poly ans(SZ(p)+1);
+	poly ans(SZ(p)+1);//integral of p
 	fore(i,0,SZ(p)) ans[i+1]=mulmod(p[i], inv(i+1));
 	return ans;
 }
-// p % (x^n)
 poly takemod(poly &p, int n){
-	poly res=p;
+	poly res=p;//p % (x^n)
 	res.resize(min(SZ(res),n));
 	while(SZ(res)>1&&res.back()==0) res.pop_back();
 	return res;
 }
-// first d terms of 1/p
 poly invert(poly &p, int d){
-	assert(p[0]);
+	assert(p[0]);//first d terms of 1/p
 	poly res={inv(p[0])};
 	int sz=1;
 	while(sz<d){
@@ -47,22 +37,20 @@ poly invert(poly &p, int d){
 	}
 	res.resize(d);
 	return res;
-}
-// first d terms of log(p)
+}//O(n*log(n))
 poly log(poly &p, int d){
-	assert(p[0]==1);
+	assert(p[0]==1);//first d terms of log(p)
 	poly cur=takemod(p,d);
 	poly a=invert(cur,d), b=derivate(cur);
 	auto res=multiply(a,b);
 	res=takemod(res,d-1);
 	res=integrate(res);
 	return res;
-}
-// first d terms of exp(p)
+}//O(n*log(n))
 poly exp(poly &p, int d){
 	assert(!p[0]);
 	poly res={1};
-	int sz=1;
+	int sz=1;//first d terms of exp(p)
 	while(sz<d){
 		sz*=2; poly lg=log(res, sz), cur(sz);
 		fore(i,0,sz) cur[i]=submod(i<SZ(p)?p[i]:0, i<SZ(lg)?lg[i]:0);
@@ -72,7 +60,7 @@ poly exp(poly &p, int d){
 	}
 	res.resize(d);
 	return res;
-}
+}//O(n*log(n))
 pair<poly,poly> divslow(poly &a, poly &b){
 	poly q,r=a;
 	while(SZ(r)>=SZ(b)){
@@ -84,7 +72,7 @@ pair<poly,poly> divslow(poly &a, poly &b){
 	}
 	reverse(ALL(q)); return {q,r};
 }
-pair<poly,poly> divide(poly &a, poly &b){	//returns {quotient,remainder}
+pair<poly,poly> divide(poly &a, poly &b){
 	int m=SZ(a),n=SZ(b),MAGIC=750;
 	if(m<n) return {{0},a};
 	if(min(m-n,n)<MAGIC)return divslow(a,b);
@@ -96,8 +84,8 @@ pair<poly,poly> divide(poly &a, poly &b){	//returns {quotient,remainder}
 	reverse(ALL(q));
 	poly bq=multiply(b,q);
 	fore(i,0,SZ(bq)) bq[i]=submod(0,bq[i]);
-	poly r=add(a,bq); return {q,r};
-}
+	poly r=add(a,bq); return {q,r};//quot,rem
+}//O(n*log(n))
 vector<poly> tree;
 void filltree(vector<tf> &x){
 	int k=SZ(x); tree.resize(2*k);
@@ -109,7 +97,7 @@ vector<tf> evaluate(poly &a, vector<tf> &x){
 	ans[1]=divide(a,tree[1]).snd;
 	fore(i,2,2*k) ans[i]=divide(ans[i>>1],tree[i]).snd;
 	vector<tf> r; fore(i,0,k) r.pb(ans[i+k][0]); return r;
-}
+}//O(n*log^2(n))
 poly derivate(poly &p){
 	poly ans(SZ(p)-1);
 	fore(i,1,SZ(p)) ans[i-1]=mulmod(p[i],i);
@@ -125,4 +113,4 @@ poly interpolate(vector<tf> &x, vector<tf> &y){
 		intree[i]=addpoly(p1,p2);
 	}
 	return intree[1];
-}
+}//O(n*log^2(n))
