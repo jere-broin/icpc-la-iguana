@@ -4,7 +4,6 @@
 // Inverse: O(n*log(n))
 // Log: O(n*log(n))
 // Exp: O(n*log(n))
-
 //Works with NTT. For FFT, just replace addmod,submod,mulmod,inv
 poly add(poly &a, poly &b){
 	int n=SZ(a),m=SZ(b);
@@ -13,21 +12,18 @@ poly add(poly &a, poly &b){
 	while(SZ(ans)>1&&!ans.back())ans.pop_back();
 	return ans;
 }
-
 // derivative of p
 poly derivate(poly &p){
 	poly ans(max(1, SZ(p)-1));
 	fore(i,1,SZ(p)) ans[i-1]=mulmod(p[i],i);
 	return ans;
 }
-
 // integral of p
 poly integrate(poly &p){
 	poly ans(SZ(p)+1);
 	fore(i,0,SZ(p)) ans[i+1]=mulmod(p[i], inv(i+1));
 	return ans;
 }
-
 // p % (x^n)
 poly takemod(poly &p, int n){
 	poly res=p;
@@ -35,7 +31,6 @@ poly takemod(poly &p, int n){
 	while(SZ(res)>1&&res.back()==0) res.pop_back();
 	return res;
 }
-
 // first d terms of 1/p
 poly invert(poly &p, int d){
 	assert(p[0]);
@@ -53,7 +48,6 @@ poly invert(poly &p, int d){
 	res.resize(d);
 	return res;
 }
-
 // first d terms of log(p)
 poly log(poly &p, int d){
 	assert(p[0]==1);
@@ -64,21 +58,18 @@ poly log(poly &p, int d){
 	res=integrate(res);
 	return res;
 }
-
 // first d terms of exp(p)
 poly exp(poly &p, int d){
 	assert(!p[0]);
 	poly res={1};
 	int sz=1;
 	while(sz<d){
-		sz*=2;
-		poly lg=log(res, sz), cur(sz);
+		sz*=2; poly lg=log(res, sz), cur(sz);
 		fore(i,0,sz) cur[i]=submod(i<SZ(p)?p[i]:0, i<SZ(lg)?lg[i]:0);
 		cur[0]=addmod(cur[0],1);
 		res=multiply(res,cur);
 		res=takemod(res, sz);
 	}
-	
 	res.resize(d);
 	return res;
 }
