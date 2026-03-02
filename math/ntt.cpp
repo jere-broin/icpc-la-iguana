@@ -44,7 +44,6 @@ struct FFT {
 	}
 };
 
-// For modular convolutions modulo 998244353.
 // Replace with any NTT-friendly mod by doing:
 // FFT<uint32_t, uint64_t, MOD, primitiveRoot(MOD)>
 poly conv_small(const poly &as, const poly &bs) {
