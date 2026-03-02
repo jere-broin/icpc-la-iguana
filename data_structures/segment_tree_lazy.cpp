@@ -3,16 +3,9 @@ typedef ll tn; // segment-tree node type
 typedef ll tl; // lazy type
 #define NEUT 0 // operation neutral
 #define CLEAR 0 // cleared lazy node
-tn oper(tn a, tn b){ // segment tree operation
-	return a+b;
-}
-void acum(tl &a, tl v){ // accumulate lazy
-	a+=v;
-}
-tn calc(int s, int e, tn a, tl v){ // calculate new segment tree value of node with range [s,e), previous value a, and lazy update v
-	a+=(e-s)*v;
-	return a;
-}
+tn oper(tn a, tn b){return a+b;}
+void acum(tl &a, tl v){a+=v;}
+tn calc(int s, int e, tn a, tl v){a+=(e-s)*v; return a;}
 struct STree{
 	vector<tn>st; vector<tl>lazy; int n;
 	STree(int n):st(4*n+5,NEUT),lazy(4*n+5,CLEAR),n(n){}
