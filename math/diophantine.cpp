@@ -4,9 +4,9 @@ ii extendedEuclid (ll a, ll b){ //a * x + b * y = gcd(a,b)
 	if(a*x+b*y<0) x=-x, y=-y;
 	return {x,y};
 }
-pair<ii,ii> diophantine(ll a,ll b,ll r) {
+ii diophantine(ll a,ll b,ll r) {
 	//a*x+b*y=r where r is multiple of gcd(a,b);
 	ll d=gcd(a,b); a/=d; b/=d; r/=d;
 	auto p = extendedEuclid(a,b); p.fst*=r; p.snd*=r;
-	return {p,{-b,a}}; // solutions: p+t*ans.snd
+	return p; // solutions: p+t*(-b,a)/d
 }
