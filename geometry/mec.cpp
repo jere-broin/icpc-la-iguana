@@ -25,18 +25,9 @@ pair<pt,ld> mec(vector<pt> ps) {
 	return {o,r};
 }
 --this points not affect mec
-pt centroid(pt A, pt B, pt C) { // geometric center of mass
-    return bary(A, B, C, 1, 1, 1);
-}
-pt incenter(pt A, pt B, pt C) { // intersection of internal angle bisectors
-    return bary(A, B, C, (B-C).norm(), (A-C).norm(), (A-B).norm());
-}
-pt orthocenter(pt A, pt B, pt C) { // norm is squared  // intersection of altitudes
-    double a = (B - C).norm2(), b = (C - A).norm2(), c = (A - B).norm2();
-    return bary(A, B, C, (a+b-c)*(c+a-b), (b+c-a)*(a+b-c), (c+a-b)*(b+c-a));
-}
-pt excenter(pt A, pt B, pt C) { // intersection of two external angle bisectors
-    double a = (B - C).norm(), b = (A - C).norm(), c = (A - B).norm();
-    return bary(A, B, C, -a, b, c);
-    //there are three excenters return bary(A, B, C, a, -b, c); return bary(A, B, C, a, b, -c);
-}
+centroid:bary(A,B,C,1,1,1);
+incenter:bary(A,B,C,(B-C).norm,(A-C).norm,(A-B).norm)
+a=(B-C).norm2,b=(C-A).norm2,c=(A-B).norm2
+orthocenter:bary(A,B,C,(a+b-c)*(c+a-b),(b+c-a)*(a+b-c),(c+a-b)*(b+c-a))
+a=(B-C).norm,b=(A-C).norm,c=(A-B).norm
+excenter:bar(A,B,C,-a,b,c)
