@@ -1,3 +1,4 @@
+//need rollback UF
 enum {ADD,DEL,QUERY};
 struct Query {int type,x,y;};
 struct DynCon {
