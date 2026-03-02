@@ -1,5 +1,5 @@
-//Max palindrome centered on i
-vv manacher(string &s, bool p){ // p==pal-len parity
+//Max palindrome centered on i, p=pal-parity
+vv manacher(string &s, bool p){
     int n=SZ(s), l=-1,r=0; 
     vv d(n); // substr(l,r) last max pal
     fore(i,0,n){
