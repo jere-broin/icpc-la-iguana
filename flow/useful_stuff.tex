@@ -25,9 +25,23 @@
     \item if $d(v) > 0$, $\text{add\_edge}(v, t, d(v))$
     \item There is circulation if all s,t arcs saturate
   \end{itemize}
-  \item Circulation with demans and lowerbounds ($l$)
+  \item Circulation with demands and lowerbounds ($l$)
   \begin{itemize}
     \item new $cap(e)$ = $cap(e)$ - $l(e)$
     \item new $d(v)$ = $d(v)$ + sum of $l(e)$ out - sum of $l(e)$ in
   \end{itemize}
+  \item  Flow with edge demands
+  \begin{itemize}
+    \item add new source $s'$ and sink $t'$
+	\item add new edge $(t,s,\infty)$
+	\item for each $add\_demand(x,y,d,c)$ (add edge with demand $d$ and capacity $c$, $d\leq c$)
+ 	\begin{itemize}
+		\item add edge $(s',y,d)$
+		\item add edge $(x,t',d)$
+		\item add edge $(x,y,c-d)$
+	\end{itemize}
+	\item run Dinic from $s'$ to $t'$ and check if $s'$ is saturated
+	\item for max flow, run again Dinic from s to t
+  \end{itemize}
+
 \end{itemize}
