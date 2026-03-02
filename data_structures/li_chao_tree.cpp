@@ -1,45 +1,60 @@
-struct LCTree{ // Search MIN, Comments to MAX
-    struct F{vector<ll> a;ll operator()(ll x)const{return a[0]+x*a[1];}};//intersect others 1
-    const F NEUT={{ll(1e18), 0}}; // MAX: -1e18
-    bool cmp(const F&fa, const F&fb,ll x){return fa(x)<fb(x);} // MAX: >
-    struct Node{
-        F f;Node *l,*r;
-        Node(F ff):f(ff),l(0),r(0){}
-        ~Node(){delete l;delete r;}
-    };
-    ll a,b;int sz;Node *root;
-    LCTree(ll aa,ll bb):a(aa),b(bb),sz(1){root=new Node(NEUT);}
-    ~LCTree(){delete root;}
-    Node *upd2(ll s,ll e,F &f,Node *sig){
-        if(!sig)sig=new Node(f),sz++;
-        else upd(s,e,f,sig);
-        return sig;
-    }
-    void upd(ll s,ll e,F &f,Node *st){
-        if(s+1==e&&cmp(f,st->f,s))st->f=f;
-        ll m=(s+e)/2;
-        int val=cmp(f,st->f,s)*100+cmp(f,st->f,m)*10+cmp(f,st->f,e);
-        if(val==11)swap(f,st->f),st->l=upd2(s,m,f,st->l);
-        else if(val==110)swap(f,st->f),st->r=upd2(m,e,f,st->r);
-        else if(val==111)st->f=f;
-        else if(val==1)st->r=upd2(m,e,f,st->r);
-        else if(val==100)st->l=upd2(s,m,f,st->l);
-        assert(val!=10&&val!=101); // F prop
-    }
-    ll query(ll s,ll e,ll x,Node *st){
-        if(s+1==e)return st->f(x);
-        ll m=(s+e)/2;
-        if(x<m&&st->l)return min(st->f(x),query(s,m,x,st->l)); // MAX: max()
-        else if(st->r)return min(st->f(x),query(m,e,x,st->r)); // MAX: max()
-        else return st->f(x);
-    }
-    void merge(Node *st){
-        upd(st->f);if(st->l)merge(st->l);
-        if(st->r)merge(st->r);
-    }
-    void upd(F f){upd(a,b,f,root);}
-    ll query(ll x){return query(a,b,x,root);}
-    void merge(LCTree *lct){merge(lct->root);}
-//LCTree lt(a,b);LCTree::F f;lt.upd(f);lt.query(x);
-//LCTree *plt;lt.merge(plt);delete plt;lt.sz;
+// LiChaoTree lct(sz) -> allows queries for all x in range [0,sz)
+// lct.add(L)         -> add line L to range [0,sz) in O(log(sz))
+// lct.add(L,st,en)   -> add line L to range [st,en) in O(log^2(sz))
+// lct.query(x)       -> query maximum L(x) across all current lines in O(log(sz))
+
+typedef long long T;
+T INF=1e18;
+
+struct Line{
+	T a, b;
+	Line():a(0),b(-INF){}
+	Line(T a, T b):a(a),b(b){}
+	T get(T x){return a*x+b;}
+};
+
+struct LiChaoTree{
+	struct Node{
+		Line line;
+		Node *lc,*rc=0;
+	}*root;
+	int sz;
+	LiChaoTree(int sz): root(new Node()), sz(sz){}
+
+	void addRec(Node* &n, int tl, int tr, Line x){
+		if(!n) n=new Node();
+		if(n->line.get(tl)<x.get(tl)) swap(n->line,x);
+		if(n->line.get(tr-1)>=x.get(tr-1)||tl+1==tr) return;
+		int mid=(tl+tr)/2;
+		if(n->line.get(mid)>x.get(mid)){
+			addRec(n->rc,mid,tr,x);
+		}
+		else{
+			swap(n->line,x);
+			addRec(n->lc,tl,mid,x);
+		}
+	}
+
+	void add(Node* &n, int tl, int tr, int l, int r, Line x){
+		if(tr<=l||r<=tl) return;
+		if(!n) n=new Node();
+		if(l<=tl&&tr<=r) return addRec(n,tl,tr,x);
+		int mid=(tl+tr)/2;
+		add(n->lc,tl,mid,l,r,x);
+		add(n->rc,mid,tr,l,r,x);
+	}
+
+	T query(Node* &n, int tl, int tr, int x){
+		if(!n) return -INF;
+		if(tl+1==tr) return n->line.get(x);
+		T res=n->line.get(x);
+		int mid=(tl+tr)/2;
+		if(x<mid) res=max(res, query(n->lc,tl,mid,x));
+		else res=max(res, query(n->rc,mid,tr,x));
+		return res;
+	}
+
+	void add(Line x){add(root,0,sz,0,sz,x);}
+	void add(Line x, int l, int r){add(root,0,sz,l,r,x);}
+	T query(int x){return query(root,0,sz,x);}
 };

@@ -1,116 +1,146 @@
-// F. Escape Through Leaf: AC
-// https://codeforces.com/contest/932/problem/F
+// Universal Cup 15455 - AC
+// https://contest.ucup.ac/contest/2668/problem/15455
 
 #include <bits/stdc++.h>
-
-using namespace std;
-
-#define fore(i, a, b) for(ll i = a, bella = b; i < bella; i++)
-#define mset(a, b) memset(a, b, sizeof(a))
-#define ALL(a) a.begin(), a.end()
-#define SZ(a) ll(a.size())
-#define fst first 
+#define fst first
 #define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 #define pb push_back
-#define FIO ios::sync_with_stdio(0); cin.tie(0); cout.tie(0)
-
-typedef long double ld;
+#define ALL(s) s.begin(),s.end()
+#define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+#define SZ(s) int(s.size())
+using namespace std;
 typedef long long ll;
-typedef pair<ll, ll> ii;
-typedef vector<ll> vi;
+typedef pair<int,int> ii;
+typedef long double ld;
 
-const int MAXN = 1e5+7;
+// LiChaoTree lct(sz) -> allows queries for all x in range [0,sz)
+// lct.add(L)         -> add line L to range [0,sz) in O(log(sz))
+// lct.add(L,st,en)   -> add line L to range [st,en) in O(log^2(sz))
+// lct.query(x)       -> query maximum L(x) across all current lines in O(log(sz))
 
-struct LCTree{ // Search MIN, Comments to MAX
-    struct F{vector<ll> a;ll operator()(ll x)const{return a[0]+x*a[1];}};//intersect others 1
-    const F NEUT={{ll(1e18), 0}}; // MAX: -1e18
-    bool cmp(const F&fa, const F&fb,ll x){return fa(x)<fb(x);} // MAX: >
-    struct Node{F f;Node *l,*r;
-        Node(F ff):f(ff),l(0),r(0){}
-        ~Node(){delete l;delete r;}};
-    ll a,b;int sz;Node *root;
-    LCTree(ll aa,ll bb):a(aa),b(bb),sz(1){root=new Node(NEUT);}
-    ~LCTree(){delete root;}
-    Node *upd2(ll s,ll e,F &f,Node *sig){
-        if(!sig)sig=new Node(f),sz++;
-        else upd(s,e,f,sig);
-        return sig;
-    }
-    void upd(ll s,ll e,F &f,Node *st){
-        if(s+1==e&&cmp(f,st->f,s))st->f=f;
-        ll m=(s+e)/2;
-        int val=cmp(f,st->f,s)*100+cmp(f,st->f,m)*10+cmp(f,st->f,e);
-        if(val==11)swap(f,st->f),st->l=upd2(s,m,f,st->l);
-        else if(val==110)swap(f,st->f),st->r=upd2(m,e,f,st->r);
-        else if(val==111)st->f=f;
-        else if(val==1)st->r=upd2(m,e,f,st->r);
-        else if(val==100)st->l=upd2(s,m,f,st->l);
-        assert(val!=10&&val!=101); // F prop
-    }
-    ll query(ll s,ll e,ll x,Node *st){
-        if(s+1==e)return st->f(x);
-        ll m=(s+e)/2;
-        if(x<m&&st->l)return min(st->f(x),query(s,m,x,st->l)); // MAX: max()
-        else if(st->r)return min(st->f(x),query(m,e,x,st->r)); // MAX: max()
-        else return st->f(x);
-    }
-    void merge(Node *st){
-        upd(st->f);if(st->l)merge(st->l);
-        if(st->r)merge(st->r);
-    }
-    void upd(F f){upd(a,b,f,root);}
-    ll query(ll x){return query(a,b,x,root);}
-    void merge(LCTree *lct){merge(lct->root);}
-    // LCTree lct(a,b);LCTree::F f;lct.upd(f);lct.query(x);
-    // LCTree *plct;lct.merge(plct);delete plct;lct.sz;
+typedef ld T;
+T INF=1e18;
+
+struct Line{
+	T a, b;
+	Line():a(0),b(-INF){}
+	Line(T a, T b):a(a),b(b){}
+	T get(T x){return a*x+b;}
 };
 
-int n, id[MAXN];
-ll a[MAXN], b[MAXN], ans[MAXN];
-vi g[MAXN];
-LCTree *lct[MAXN];
- 
-void dfs(int u, int f) {
-    if(SZ(g[u]) == 1 && g[u][0] == f) {
-        lct[u] = new LCTree(-MAXN,MAXN);
-        lct[u]->upd({{0, b[u]}});
-        id[u] = u;
-        return;
+struct LiChaoTree{
+	struct Node{
+		Line line;
+		Node *lc,*rc=0;
+	}*root;
+	int sz;
+	LiChaoTree(int sz): root(new Node()), sz(sz){}
+
+	void addRec(Node* &n, int tl, int tr, Line x){
+		if(!n) n=new Node();
+		if(n->line.get(tl)<x.get(tl)) swap(n->line,x);
+		if(n->line.get(tr-1)>=x.get(tr-1)||tl+1==tr) return;
+		int mid=(tl+tr)/2;
+		if(n->line.get(mid)>x.get(mid)){
+			addRec(n->rc,mid,tr,x);
+		}
+		else{
+			swap(n->line,x);
+			addRec(n->lc,tl,mid,x);
+		}
+	}
+
+	void add(Node* &n, int tl, int tr, int l, int r, Line x){
+		if(tr<=l||r<=tl) return;
+		if(!n) n=new Node();
+		if(l<=tl&&tr<=r) return addRec(n,tl,tr,x);
+		int mid=(tl+tr)/2;
+		add(n->lc,tl,mid,l,r,x);
+		add(n->rc,mid,tr,l,r,x);
+	}
+
+	T query(Node* &n, int tl, int tr, int x){
+		if(!n) return -INF;
+		if(tl+1==tr) return n->line.get(x);
+		T res=n->line.get(x);
+		int mid=(tl+tr)/2;
+		if(x<mid) res=max(res, query(n->lc,tl,mid,x));
+		else res=max(res, query(n->rc,mid,tr,x));
+		return res;
+	}
+
+	void add(Line x){add(root,0,sz,0,sz,x);}
+	void add(Line x, int l, int r){add(root,0,sz,l,r,x);}
+	T query(int x){return query(root,0,sz,x);}
+};
+
+int main(){FIN;
+	int n,m,k; cin>>n>>m>>k;
+    vector<ll> a(n+1);
+    fore(i,1,n+1) cin>>a[i];
+
+    auto s=a;
+    fore(i,1,n+1) s[i]+=s[i-1];
+
+    vector<ll> mn(n+1,1e18),mx(n+1,-1e18);
+
+    multiset<ll> all;
+    fore(i,1,n+1){
+        if(i+k<=n+1) all.insert(s[i+k-1]-s[i-1]);
+        if(i-k>=1) all.erase(all.find(s[i-1]-s[i-k-1]));
+
+        mn[i]=*all.begin();
+        mx[i]=*all.rbegin();
     }
- 
-    int maxi = 0;
-    for(int x : g[u]) {
-        if(x == f) continue;
-        dfs(x, u);
- 
-        if(maxi < lct[id[x]]->sz) {
-            maxi = lct[id[x]]->sz;
-            id[u] = id[x];
+
+    vector<ld> ans(m+1, 2);
+
+    for(auto x:a) ans[x]=0;
+
+    {
+        LiChaoTree lt(m+1);
+    
+        fore(i,1,n+1){
+            if(mn[i]==a[i]*k) continue;
+
+            ll low=(mn[i]+k-1)/k, up=a[i];
+            ld avg=1.*mn[i]/k;
+
+            ld A = 1. / (avg - a[i]);
+            ld B = -1.*a[i] / (avg - a[i]);
+
+            lt.add(Line(-A, -B), low, up+1);
+        }
+
+        fore(k,1,m+1) if(ans[k]>0){
+            ans[k]=min(ans[k], -lt.query(k));
         }
     }
- 
-    for(int x : g[u]) {
-        if(x == f || id[u] == id[x]) continue;
-        lct[id[u]]->merge(lct[id[x]]);
-        delete lct[id[x]];
+
+    {
+        LiChaoTree lt(m+1);
+    
+        fore(i,1,n+1){
+            if(mx[i]==a[i]*k) continue;
+
+            ll low=a[i], up=mx[i]/k;
+            ld avg=1.*mx[i]/k;
+
+            ld A = 1. / (avg - a[i]);
+            ld B = -1.*a[i] / (avg - a[i]);
+
+            lt.add(Line(-A, -B), low, up+1);
+        }
+
+        fore(k,1,m+1) if(ans[k]>0){
+            ans[k]=min(ans[k], -lt.query(k));
+        }
     }
- 
-    ans[u] = lct[id[u]]->query(a[u]);
-    lct[id[u]]->upd({{ans[u], b[u]}});
-}
 
-int main() { FIO;
-
-    cin >> n;
-    fore(i, 0, n) cin >> a[i];
-    fore(i, 0, n) cin >> b[i];
-    fore(i, 0, n-1) {
-        int u, v; cin >> u >> v; --u, --v;
-        g[u].pb(v); g[v].pb(u);
+    cout<<fixed<<setprecision(10);
+    fore(i,1,m+1){
+        if(ans[i]>1.5) cout<<"-1\n";
+        else cout<<ans[i]<<"\n";
     }
-    dfs(0, -1);
-    fore(i, 0, n) cout << ans[i] << ' ';
-    cout << '\n';
-
-    return 0;
 }
