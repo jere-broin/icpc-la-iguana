@@ -3,16 +3,15 @@
 #include <bits/stdc++.h>
 #define fst first
 #define snd second
-#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define fore(i,a,b) for(ll i=a,jet=b;i<jet;++i)
 #define pb push_back
 #define ALL(s) s.begin(),s.end()
-#define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
-#define SZ(s) int(s.size())
+#define JET ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+#define SZ(s) ((ll)(s.size()))
 using namespace std;
 typedef long long ll;
 typedef pair<int,int> ii;
 
-// The maximum length of the resulting convolution vector is 2^LG
 const int LG = 20;
 typedef vector<ll> poly;
 
@@ -33,7 +32,7 @@ struct FFT {
 		for(int i=(2<<LG)-1;i>=0;i--) r[i]=red(p, m(r[i+1], k)), i&(i-1)?0:k=m(k,k);
 	}
 	poly cv(const poly &as, const poly &bs, u *v) {
-		int c=max(SZ(as)+SZ(bs)-1, 0), n=1;
+		int c=max(SZ(as)+SZ(bs)-1, 0ll), n=1;
 		assert(c <= (1<<LG));
 		u h=u(uu(-p)*-p%p), a=m(h, p/2+1), x, y;
 		while(n<c) n*=2, h=red(p, m(h, a));
@@ -57,7 +56,6 @@ struct FFT {
 		return poly(v, v+c);
 	}
 };
-
 // For modular convolutions modulo 998244353.
 // Replace with any NTT-friendly mod by doing:
 // FFT<uint32_t, uint64_t, MOD, primitiveRoot(MOD)>
@@ -108,7 +106,7 @@ poly sub(poly p, poly q){
 	return ans;
 }
  
-int main(){FIN;
+int main(){JET
 	int n1,m1; cin>>n1>>m1;
 	vector<vector<int>> a(n1,vector<int>(m1));
 	fore(i,0,n1) fore(j,0,m1) cin>>a[i][j];

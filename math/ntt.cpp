@@ -19,7 +19,7 @@ struct FFT {
 		for(int i=(2<<LG)-1;i>=0;i--) r[i]=red(p, m(r[i+1], k)), i&(i-1)?0:k=m(k,k);
 	}
 	poly cv(const poly &as, const poly &bs, u *v) {
-		int c=max(SZ(as)+SZ(bs)-1, 0), n=1;
+		int c=max(SZ(as)+SZ(bs)-1, 0ll), n=1;
 		assert(c <= (1<<LG));
 		u h=u(uu(-p)*-p%p), a=m(h, p/2+1), x, y;
 		while(n<c) n*=2, h=red(p, m(h, a));
