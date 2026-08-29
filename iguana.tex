@@ -9,6 +9,8 @@
 \def\title{Universidad Nacional de Cordoba - Helicóptero}
 .\\[0.2cm]
 \centering{\LARGE\textbf{Helicóptero}} \\[0.5cm]
+\centering{\includegraphics[width=5.5cm]{img/HÉLICE_COLOR.png}}
+
 
 \addtocontents{toc}{\setcounter{tocdepth}{1}} % Set depth to 1
 \tableofcontents
@@ -180,6 +182,9 @@
 \subsection{Convex hull}
 \cppfile{geometry/convex_hull.cpp}
 
+\subsection{Convex hull reduced}
+\cppfile{geometry/reduced_chull.cpp}
+
 \subsection{MEC}
 \cppfile{geometry/mec.cpp}
 
@@ -286,11 +291,10 @@ Small-to-large;randomize;ver diferencias;berlekamp;
 
 !!! INICIALIZAR, REVISAR COMENTARIOS, COTAS, INT128/LL, VER N=1 !!!
 
-%Vasito picture
-%\includegraphics[scale=.7]{vasito.jpg}
+% Vasito picture
 
 %\subsection{All HCN}
-%\cppfile{other/hcn_all.txt}
+% \cppfile{other/hcn_all.txt}
 
 \end{multicols}
 
