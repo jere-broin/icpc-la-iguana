@@ -1,6 +1,7 @@
+// d35827
 // The maximum length of the resulting convolution vector is 2^LG
 const int LG = 20;
-typedef vector<ll> poly;
+typedef vv poly;
 
 template<class u, class uu, u p, u root>
 struct FFT {
