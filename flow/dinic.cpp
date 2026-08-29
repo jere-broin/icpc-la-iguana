@@ -1,9 +1,10 @@
 // Min cut: nodes with dist>=0 vs nodes with dist<0
 // Matching MVC: left nodes with dist<0 + right nodes with dist>0
 struct Dinic{
-	int nodes,src,dst; vector<int> dist,q,work; vector<vector<edge>> g;
 	struct edge {int to,rev;ll f,cap;};
-	Dinic(int x):nodes(x),g(x),dist(x),q(x),work(x){}
+	vector<vector<edge>> g;
+	int src,dst; vector<int> dist,q,work;
+	Dinic(int x):g(x),dist(x),q(x),work(x){}
 	void add_edge(int s, int t, ll cap){
 		g[s].pb((edge){t,SZ(g[t]),0,cap});
 		g[t].pb((edge){s,SZ(g[s])-1,0,0});
