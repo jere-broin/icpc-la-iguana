@@ -26,4 +26,9 @@ $E_{n,k} = (k+1)E_{n-1,k} + (n-k)E_{n-1,k-1}$
 $log(1-x^k) = - \sum_{j=1}^{\infty} \frac{x^{kj}}{j}$
 
 Bolitas en cajitas acotado, $N$ bolitas, $n$ cajitas, $r$ es la cota por cajita.
+
 $\sum_{k=0}^{\lfloor N/(r+1) \rfloor} (-1)^k \binom{n}{k} \binom{N - k(r + 1) + n - 1}{n - 1}$
+
+Catalan's triangle: number of rbs of $n$ pairs with $k$ pairs at depth 0.
+
+$cat(n, k) = \frac{k}{2n - k} \binom{2n - k}{n} = \binom{2n - k - 1}{n - k} - \binom{2n - k - 1}{n - k - 1}$
