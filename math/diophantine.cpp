@@ -1,11 +1,9 @@
-ii extendedEuclid (ll a, ll b){//a*x+b*y=gcd(a,b)
-	if(!b) return {1,0};
-	auto p=extendedEuclid(b,a%b); ll x=p.snd, y=p.fst-(a/b)*x;
-	if(a*x+b*y<0) x=-x, y=-y;
-	return {x,y};
-}
-ii diophantine(ll a,ll b,ll r) {// =r inst of gcd
-	ll d=gcd(a,b); a/=d; b/=d; r/=d;
-	auto p = extendedEuclid(a,b); p.fst*=r; p.snd*=r;
-	return p; // solutions: p+t*(-b,a)/d
+// not necessary for crt
+typedef __int128 xl;
+ii diophantine(ll a, ll b, ll r) {//a*x + b*y = r
+	ll x,y,g=euclid(a,b,x,y);
+	assert(r%g==0);//else no solution
+	if(!b)return {r/a,0};
+	x=(xl)x*(r/g)%(b/g);//reduces |x|<|b/g| so (x0,y0) fits in ll
+	return {x,(r-(xl)a*x)/b};//solutions: (x0,y0) + t*(-b,a)/g
 }
