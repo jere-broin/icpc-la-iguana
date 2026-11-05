@@ -8,10 +8,10 @@ struct CHT { // for minimum (for maximum just change the sign of lines)
 	}
 	void add(tc m, tc h){ // m's should be non increasing
 		Line l=(Line){m,h};
-		if(c.size()&&m==c.back().m){
+		if(SZ(c)&&m==c.back().m){
 			l.h=min(h,c.back().h);c.pop_back();if(pos)pos--;
 		}
-		while(c.size()>1&&in(c.back(),l)<=in(c[c.size()-2],c.back())){
+		while(SZ(c)>1&&in(c.back(),l)<=in(c[SZ(c)-2],c.back())){
 			c.pop_back();if(pos)pos--;
 		}
 		c.pb(l);
@@ -19,7 +19,7 @@ struct CHT { // for minimum (for maximum just change the sign of lines)
 	inline bool fbin(tc x, int m){return in(c[m],c[m+1])>x;}
 	tc eval(tc x){
 		// O(log n) query:
-		int s=0,e=c.size();
+		int s=0,e=SZ(c);
 		while(e-s>1){int m=(s+e)/2;
 			if(fbin(x,m-1))e=m;
 			else s=m;
@@ -27,7 +27,18 @@ struct CHT { // for minimum (for maximum just change the sign of lines)
 		return c[s].m*x+c[s].h;
 		// O(1) query (for ordered x's):
 		while(pos>0&&fbin(x,pos-1))pos--;
-		while(pos<c.size()-1&&!fbin(x,pos))pos++;
+		while(pos<SZ(c)-1&&!fbin(x,pos))pos++;
 		return c[pos].m*x+c[pos].h;
 	}
 };
+CHT operator+(CHT a, CHT b){ // minkowsi sum trick, O(n+m)
+	CHT r;
+	int i=0,j=0,n=SZ(a.c),m=SZ(b.c);
+	while(i<n&&j<m){
+		Line l=a.c[i],k=b.c[j];
+		r.add(l.m+k.m, l.h+k.h);
+		if(i!=n-1 && (j==m-1||a.in(l,a.c[i+1])<b.in(k,b.c[j+1])))i++;
+		else j++;
+	}
+	return r;
+}
