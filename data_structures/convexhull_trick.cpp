@@ -31,12 +31,10 @@ struct CHT { // for minimum (for maximum just change the sign of lines)
 		return c[pos].m*x+c[pos].h;
 	}
 };
-CHT operator+(CHT a, CHT b){ // minkowsi sum trick, O(n+m)
-	CHT r;
-	int i=0,j=0,n=SZ(a.c),m=SZ(b.c);
-	while(i<n&&j<m){
-		Line l=a.c[i],k=b.c[j];
-		r.add(l.m+k.m, l.h+k.h);
+CHT operator+(CHT a, CHT b){ // minkowsi sum trick
+	int i=0,j=0,n=SZ(a.c),m=SZ(b.c); CHT r;
+	while(i<n&&j<m){ // O(n+m)
+		Line l=a.c[i],k=b.c[j]; r.add(l.m+k.m,l.h+k.h);
 		if(i!=n-1 && (j==m-1||a.in(l,a.c[i+1])<b.in(k,b.c[j+1])))i++;
 		else j++;
 	}
