@@ -40,7 +40,7 @@ struct pt {  // for 3D add z coordinate
 // CCW order
 // Includes collinear points (change sign of EPS in left to exclude)
 vector<pt> chull(vector<pt> p){
-	vector<pt> r;
+	vector<pt> r; if(p.empty())return r;
 	sort(p.begin(),p.end()); // first x, then y
 	p.erase(unique(p.begin(),p.end()), p.end());
 	fore(i,0,p.size()){ // lower hull
