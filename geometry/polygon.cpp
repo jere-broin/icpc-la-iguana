@@ -39,7 +39,7 @@ struct pol {
 		}
 		return !q.left(p[a],p[a+1]);
 	}
-	pt farthest(pt v){ // O(log(n)) only CONVEX, any of cw or ccw
+	pt farthest(pt v){ // O(log(n)) only CONVEX, NO COLLINEAR POINTS, cw or ccw
         auto cmp=[&](int i,int j){return v*(p[j]-p[i])>EPS;};
         if(n<10){
             int k=0;fore(i,1,n)if(cmp(k,i))k=i;
@@ -97,8 +97,8 @@ void add(pt q){ // add(q), O(log^2(n))
 	}
 	w.pb(pol(chull(p)));
 }
-ll query(pt v){ // max(q*v:q in w), O(log^2(n))
-	ll r=-INF;
+double query(pt v){ // max(q*v:q in w), O(log^2(n))
+	double r=-INF;
 	for(auto& p:w)r=max(r,p.farthest(v)*v);
 	return r;
 }

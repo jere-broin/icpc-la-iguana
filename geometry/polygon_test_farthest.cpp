@@ -73,7 +73,7 @@ struct pol {
     int n;vector<pt> p;
     pol(){}
     pol(vector<pt> _p){p=_p;n=p.size();}
-    pt farthest(pt v){ // O(log(n)) only CONVEX
+    pt farthest(pt v){ // O(log(n)) only CONVEX, NO COLLINEAR POINTS, cw or ccw
         auto cmp=[&](int i,int j){return v*(p[j]-p[i])>EPS;};
         if(n<10){
             int k=0;fore(i,1,n)if(cmp(k,i))k=i;

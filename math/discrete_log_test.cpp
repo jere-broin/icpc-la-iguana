@@ -21,10 +21,10 @@ ll gcd(ll a, ll b) { return __gcd(a,b);}
  
 ll discrete_log(ll a,ll b,ll m) {//returns x such that a^x = b (mod m) or -1 if inexistent
   a%=m, b%=m;
-  if(b == 1) return 0;
+  if(b == 1 || m == 1) return 0;
   int cnt=0;
   ll tmp=1;
-  for(int g=__gcd(a,m);g!=1;g=__gcd(a,m)) {
+  for(ll g=__gcd(a,m);g!=1;g=__gcd(a,m)) {
     if(b%g) return -1;
     m/=g, b/=g;
     tmp = tmp*a/g%m;
@@ -32,7 +32,7 @@ ll discrete_log(ll a,ll b,ll m) {//returns x such that a^x = b (mod m) or -1 if 
     if(b == tmp) return cnt;
   }
   map<ll,int> w;
-  int s = ceil(sqrt(m));
+  ll s = ceil(sqrt(m));
   ll base = b;
   fore(i,0,s) {
     w[base] = i;

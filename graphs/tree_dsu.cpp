@@ -1,5 +1,5 @@
 vi g[N]; int sz[N]; bool bigboy[N];
-void add(int x, int y = -1, int k) {
+void add(int x, int y, int k) {
   for(auto v:g[x])if(v!=y&&!bigboy[v])add(v,x,k);
   // do something
 }
