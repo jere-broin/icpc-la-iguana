@@ -32,7 +32,7 @@ struct Line{
 struct LiChaoTree{
 	struct Node{
 		Line line;
-		Node *lc,*rc=0;
+		Node *lc=0,*rc=0;
 	}*root;
 	int sz;
 	LiChaoTree(int sz): root(new Node()), sz(sz){}
