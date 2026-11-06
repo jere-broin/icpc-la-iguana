@@ -72,29 +72,27 @@ vector<pt> chull(vector<pt> p){
 }
 
 struct pol {
-	int n;vector<pt> p;
-	pol(){}
-	pol(vector<pt> _p){p=_p;n=p.size();}
-	pt farthest(pt v){ // O(log(n)) only CONVEX
-		if(n<10){
-			int k=0;
-			fore(i,1,n)if(v*(p[i]-p[k])>EPS)k=i;
-			return p[k];
-		}
-		if(n==SZ(p))p.pb(p[0]);
-		pt a=p[1]-p[0];
-		int s=0,e=n,ua=v*a>EPS;
-		if(!ua&&v*(p[n-1]-p[0])<=EPS)return p[0];
-		while(1){
-			int m=(s+e)/2;pt c=p[m+1]-p[m];
-			int uc=v*c>EPS;
-			if(!uc&&v*(p[m-1]-p[m])<=EPS)return p[m];
-			if(ua&&(!uc||v*(p[s]-p[m])>EPS))e=m;
-			else if(ua||uc||v*(p[s]-p[m])>=-EPS)s=m,a=c,ua=uc;
-			else e=m;
-			assert(e>s+1);
-		}
-	}
+    int n;vector<pt> p;
+    pol(){}
+    pol(vector<pt> _p){p=_p;n=p.size();}
+    pt farthest(pt v){ // O(log(n)) only CONVEX
+        auto cmp=[&](int i,int j){return v*(p[j]-p[i])>EPS;};
+        if(n<10){
+            int k=0;fore(i,1,n)if(cmp(k,i))k=i;
+            return p[k];
+        }
+        auto dir=[&](int i){return cmp(i,i+1);};
+        int s=0,e=n; p.pb(p[0]);
+        while(e-s>1){
+            int m=(s+e)/2;
+            bool su=dir(s),mu=dir(m);
+            if(su!=mu) su?e=m:s=m;
+            else if(su) cmp(s,m)?s=m:e=m;
+            else cmp(m,s)?s=m:e=m;
+        }
+        pt ans=p[dir(s)?s+1:s]; p.pop_back();
+        return ans;
+    }
 };
 
 
