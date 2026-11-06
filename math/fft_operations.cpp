@@ -171,7 +171,7 @@ vector<tf> evaluate(const poly &a, const vector<tf> &x){
 	return evaluate(a,et);
 }
 
-poly upsweep(EvalTree &et, int v, const vector<tf> &c){
+poly upsweep(EvalTree &et, int v, const vector<tf> &c){ // destroys et
 	if(v>=et.k) return {c[v-et.k]};
 	poly L=upsweep(et,2*v,c), R=upsweep(et,2*v+1,c);
 	poly p1=multiply(et.tree[2*v],R); poly().swap(R);

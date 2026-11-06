@@ -36,6 +36,7 @@ void merge(pitem& t, pitem l, pitem r){
 	upd_cnt(t);
 }
 void erase(pitem& t, int key){
+	if(!t)return;
 	if(t->key==key)merge(t,t->l,t->r);
 	else erase(key<t->key?t->l:t->r,key);
 	upd_cnt(t);

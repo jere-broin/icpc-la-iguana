@@ -22,7 +22,7 @@ struct pol {
 		}
 		return cnt!=0;
 	}
-	void normalize(){ // (call before haslog, remove collinear first)
+	void normalize(){ // (call before haslog, remove collinear first, leaves it CW)
 		if(p[2].left(p[0],p[1]))reverse(p.begin(),p.end());
 		int pi=min_element(p.begin(),p.end())-p.begin();
 		vector<pt> s(n);

@@ -19,7 +19,7 @@ struct STree {//persistent segment tree for min
 		int m=(s+e)/2;
 		return oper(query(L[k],s,m,a,b),query(R[k],m,e,a,b));
 	}
-	int upd(int k, int p, int v){return rt=upd(k,0,n,p,v);}
+	int upd(int k, int p, int v){return rt=upd(k,0,n,p,v);} // rt: last updated root
 	int upd(int p, int v){return upd(rt,p,v);} // update on last root
 	int query(int k,int a, int b){return query(k,0,n,a,b);};
 };

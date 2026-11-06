@@ -17,7 +17,7 @@ void go(int x){
 	}
 	p.push_back(x);
 }
-vector<int> get_path(int x){ // get a path that begins in x
+vector<int> get_path(int x){ // get a path that begins in x (destroys g)
 // check that a path exists from x before calling to get_path!
 	p.clear();go(x);reverse(p.begin(),p.end());
 	return p;

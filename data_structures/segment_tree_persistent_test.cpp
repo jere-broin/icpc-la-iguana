@@ -41,7 +41,7 @@ struct STree { // persistent segment tree for min over integers
     return oper(query(L[k],s,m,a,b),query(R[k],m,e,a,b));
   }
 	int init(int *a){return init(0,n,a);}
-	int upd(int k, int p, int v){return rt=upd(k,0,n,p,v);}
+	int upd(int k, int p, int v){return rt=upd(k,0,n,p,v);} // rt: last updated root
 	int upd(int p, int v){return upd(rt,p,v);} // update on last root
   int query(int k,int a, int b){return query(k,0,n,a,b);};
 }; // usage: STree rmq(n);root=rmq.init(x);new_root=rmq.upd(root,i,v);rmq.query(root,s,e);
