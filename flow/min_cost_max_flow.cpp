@@ -40,4 +40,15 @@ struct MCF{
 		}
 		return {flow,flowcost};
 	}
+	// If some costs can be negative, call this before maxflow:
+	void set_pot(int s){ // O(nm), or O(n+m) if DAG in topo order 0..n-1
+		fill(ALL(pot),INFCOST); pot[s]=0;
+		int it=n,ch=1;
+		while(ch--&&it--)fore(u,0,n)if(pot[u]!=INFCOST){
+			for(auto &e:g[u])if(e.cap&&pot[e.to]>pot[u]+e.cost){
+				pot[e.to]=pot[u]+e.cost,ch=1;
+			}
+		}
+		assert(it>=0); // negative cycle
+	}
 };
