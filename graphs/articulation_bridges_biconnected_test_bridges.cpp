@@ -19,7 +19,7 @@ void add_edge(int u, int v){
 }
 int D[MAXN],B[MAXN],T;
 //int nbc;  // number of biconnected components
-//int art[MAXN];  // articulation point iff !=0
+//int art[MAXN];  // articulation point iff >0
 //stack<int> st;  // only for biconnected
 void dfs(int u,int pe){
 	B[u]=D[u]=T++;

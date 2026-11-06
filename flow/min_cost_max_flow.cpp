@@ -31,7 +31,7 @@ struct MCF{
 				}
 			}
 			if(prio[t]==INFCOST) break;
-			fore(i,0,n) pot[i]+=prio[i];
+			fore(i,0,n) if(prio[i]!=INFCOST) pot[i]+=prio[i];
 			tf df=min(curflow[t],INFFLOW-flow); flow+=df;
 			for(int v=t; v!=s; v=prevnode[v]) {
 				edge &e=g[prevnode[v]][prevedge[v]];

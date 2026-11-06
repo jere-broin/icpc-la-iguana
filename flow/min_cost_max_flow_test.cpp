@@ -27,6 +27,16 @@ struct MCF{
 		g[s].pb((edge){t,SZ(g[t]),0,cap,cost});
 		g[t].pb((edge){s,SZ(g[s])-1,0,0,-cost});
 	}
+	void set_pot(int s){ // O(nm), or O(n+m) if DAG in topo order 0..n-1
+		fill(ALL(pot),INFCOST); pot[s]=0;
+		int it=n,ch=1;
+		while(ch--&&it--)fore(u,0,n)if(pot[u]!=INFCOST){
+			for(auto &e:g[u])if(e.cap&&pot[e.to]>pot[u]+e.cost){
+				pot[e.to]=pot[u]+e.cost,ch=1;
+			}
+		}
+		assert(it>=0); // negative cycle
+	}
 	pair<tf,tc> get_flow(int s, int t) {
 		tf flow=0; tc flowcost=0;
 		while(1){
@@ -53,7 +63,7 @@ struct MCF{
 				}
 			}
 			if(prio[t]==INFCOST) break;
-			fore(i,0,n) pot[i]+=prio[i];
+			fore(i,0,n) if(prio[i]!=INFCOST) pot[i]+=prio[i];
 			tf df=min(curflow[t], INFFLOW-flow);
 			flow+=df;
 			for(int v=t; v!=s; v=prevnode[v]) {
