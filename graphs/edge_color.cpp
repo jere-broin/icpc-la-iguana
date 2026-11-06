@@ -20,6 +20,6 @@ struct EC{ // for bipartite graphs O(n + m)
     col[i+1]=c[0];
   }
   res.resize(m);fore(i,0,m)res[i]=col[i+1]; // color of each edge
-  return ans; // amount of colors used
+  return ans; // amount of colors used (delta = max deg = min colors)
   }
-} ec;
+} ec; // WARNING: worst-case O(nm) time, O(n*delta) mem (in practice ~O((n+m)*delta))
